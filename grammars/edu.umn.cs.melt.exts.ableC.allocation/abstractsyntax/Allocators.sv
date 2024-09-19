@@ -43,6 +43,27 @@ top::Expr ::= @size::Expr
 
 dispatch Realloc = Expr ::= @p::Expr @size::Expr;
 
+production stackRealloc implements Realloc
+top::Expr ::= @ptr::Expr @size::Expr
+{
+  top.pp = pp"stack_realloc(${ptr}, ${size})";
+  nondecorated local resName::Name = freshName("res");
+  nondecorated local sizeName::Name = freshName("size");
+  forward fwrd = ableC_Expr {
+    proto_typedef size_t;
+    ({size_t $Name{sizeName} = $Expr{@size};
+      void *$Name{resName} = alloca($Name{sizeName});
+      // We don't know the previous size of ptr, but this is safe because ptr was
+      // previously allocated on the stack before this buffer.
+      memcpy($Name{resName}, $Expr{@ptr}, $Name{sizeName});
+      $Name{resName};})
+  };
+  forwards to
+    if null(lookupValue("memcpy", top.env))
+    then errorExpr([errFromOrigin(top, "Reallocation on stack requires include of <stdlib.h>")])
+    else @fwrd;
+}
+
 production realloc implements Realloc
 top::Expr ::= @ptr::Expr @size::Expr
 {

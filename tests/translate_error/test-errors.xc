@@ -7,12 +7,6 @@ int main() {
   // No allocator defined
   int *x = allocate(sizeof(int));
 
-  {
-    allocate_using stack;
-    // No reallocator for stack
-    x = reallocate(x, 42);
-  }
-
   with_arena a {
     // No deallocator for arena
     deallocate(x);

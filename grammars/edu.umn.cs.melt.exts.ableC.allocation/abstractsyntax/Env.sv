@@ -10,7 +10,7 @@ production stackAllocContext
 top::AllocContext ::=
 {
   top.alloc = alloca;
-  top.realloc = unsupportedRealloc("stack");
+  top.realloc = stackRealloc;
   top.dealloc = unsupportedDealloc("stack");
 }
 
