@@ -47,15 +47,17 @@ production stackRealloc implements Realloc
 top::Expr ::= @ptr::Expr @size::Expr
 {
   top.pp = pp"stack_realloc(${ptr}, ${size})";
-  nondecorated local resName::Name = freshName("res");
+  nondecorated local ptrName::Name = freshName("ptr");
   nondecorated local sizeName::Name = freshName("size");
+  nondecorated local resName::Name = freshName("res");
   forward fwrd = ableC_Expr {
     proto_typedef size_t;
-    ({size_t $Name{sizeName} = $Expr{@size};
+    ({void *$Name{ptrName} = $Expr{@ptr};
+      size_t $Name{sizeName} = $Expr{@size};
       void *$Name{resName} = alloca($Name{sizeName});
       // We don't know the previous size of ptr, but this is safe because ptr was
       // previously allocated on the stack before this buffer.
-      memcpy($Name{resName}, $Expr{@ptr}, $Name{sizeName});
+      if ($Name{ptrName}) memcpy($Name{resName}, $Name{ptrName}, $Name{sizeName});
       $Name{resName};})
   };
   forwards to
