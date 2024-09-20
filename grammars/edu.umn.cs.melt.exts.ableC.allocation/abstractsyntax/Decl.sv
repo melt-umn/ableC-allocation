@@ -59,8 +59,7 @@ production allocDecl
 top::Decl ::= errs::[Message] ac::AllocContext
 {
   forwards to
-    decls(
-      consDecl(
-        defsDecl([allocContextDef(ac)]),
-        if null(errs) then nilDecl() else consDecl(warnDecl(errs), nilDecl())));
+    if null(errs)
+    then defsDecl([allocContextDef(ac)])
+    else warnDecl(errs);
 }

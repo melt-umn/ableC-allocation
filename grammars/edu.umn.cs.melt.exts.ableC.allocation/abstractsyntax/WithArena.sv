@@ -3,6 +3,7 @@ grammar edu:umn:cs:melt:exts:ableC:allocation:abstractsyntax;
 production withArena
 top::Stmt ::= a::Name body::Stmt
 {
+  attachNote extensionGenerated("ableC-allocation");
   top.pp = ppConcat([ pp"with_arena", space(), a.pp, line(), braces(nestlines(2, body.pp)) ]);
   top.functionDefs := [];
   top.labelDefs := [];
@@ -18,7 +19,7 @@ top::Stmt ::= a::Name body::Stmt
   };
 
   forwards to
-    if null(lookupValue("arena_t", top.env))
+    if null(lookupValue("arena_malloc", top.env))
     then warnStmt([errFromOrigin(top, "Use of with_arena requires include of <arena.h>")])
     else @fwrd;
 }
