@@ -48,7 +48,7 @@ static inline void *arena_realloc(arena_t arena, void *ptr, size_t size) {
   } else if (ptr < (void*)arena->data || ptr >= (void*)arena->data + arena->capacity) {
     // The pointer is not in the current block of memory
     if (arena->next == NULL) {
-      fprintf(stderr, "arena_realloc'ed pointer %p not in arena %p\n", ptr, arena);
+      fprintf(stderr, "arena_realloc'ed pointer %p not in arena %p\n", (void*)ptr, (void*)arena);
       abort();
     }
     return arena_realloc(arena->next, ptr, size);

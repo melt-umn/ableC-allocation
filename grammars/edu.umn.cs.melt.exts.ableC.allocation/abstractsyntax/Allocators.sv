@@ -43,7 +43,7 @@ production unspecifiedAlloc implements Alloc
 top::Expr ::= @size::Expr
 {
   attachNote extensionGenerated("ableC-allocation");
-  forwards to errorExpr([errFromOrigin(top, s"An allocator to use must be specfied (e.g. `allocate_using heap;`)")]);
+  forwards to errorExpr([errFromOrigin(top, "An allocator to use must be specfied (e.g. `allocate_using heap;`)")]);
 }
 
 dispatch Realloc = Expr ::= @p::Expr @size::Expr;
