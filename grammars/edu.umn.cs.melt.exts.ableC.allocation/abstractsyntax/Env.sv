@@ -63,7 +63,7 @@ top::Env ::= d::Defs  e::Env
 aspect production openScopeEnv
 top::Env ::= e::Env
 {
-  top.allocContext = unspecifiedAllocContext() :: e.allocContext;
+  top.allocContext = head(e.allocContext) :: e.allocContext;
 }
 aspect production globalEnv
 top::Env ::= e::Env
