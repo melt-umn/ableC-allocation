@@ -107,3 +107,21 @@ top::Def ::= a::AllocContext
 {
   top.allocContextContribs = just(a);
 }
+
+fun allocErrors [Message] ::= env::Env =
+  case env.allocContext of
+  | unspecifiedAllocContext() :: _ -> [errFromOrigin(ambientOrigin(), "An allocator to use must be specfied (e.g. `allocate_using heap;`)")]
+  | _ -> []
+  end;
+
+fun reallocErrors [Message] ::= env::Env =
+  case env.allocContext of
+  | unspecifiedAllocContext() :: _ -> [errFromOrigin(ambientOrigin(), "An allocator supporting reallocation must be specfied (e.g. `allocate_using heap;`)")]
+  | _ -> []
+  end;
+
+fun deallocErrors [Message] ::= env::Env =
+  case env.allocContext of
+  | unspecifiedAllocContext() :: _ -> [errFromOrigin(ambientOrigin(), "An allocator supporting deallocation must be specfied (e.g. `allocate_using heap;`)")]
+  | _ -> []
+  end;
