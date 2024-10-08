@@ -20,7 +20,7 @@ top::Decl ::=
 
   local localErrors::[Message] =
     case lookupValue("malloc", top.env) of
-    | [] -> [errFromOrigin(top, "Heap allocation requires include of <alloca.h>")]
+    | [] -> [errFromOrigin(top, "Heap allocation requires include of <stdlib.h>")]
     | _ -> []
     end;
   forwards to allocDecl(localErrors, heapAllocContext());
