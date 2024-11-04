@@ -64,7 +64,7 @@ int main() {
   a4[4] = 5;
   check_array(a4, 5, 1, 10);
 
-  arena_free(ar);
+  arena_destroy(ar);
 
   printf("Using with_arena:\n");
   with_arena ar2 {

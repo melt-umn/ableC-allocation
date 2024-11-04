@@ -27,6 +27,13 @@ static inline arena_t arena_create() {
   return arena_create_sized(ARENA_INITIAL_CAPACITY);
 }
 
+static inline void arena_destroy(arena_t arena) {
+  if (arena->next) {
+    arena_destroy(arena->next);
+  }
+  free(arena);
+}
+
 static inline void *arena_malloc(arena_t arena, size_t size) {
   if (arena->used + size < arena->capacity) {
     // The object fits in the current segment
@@ -64,13 +71,6 @@ static inline void *arena_realloc(arena_t arena, void *ptr, size_t size) {
     memcpy(result, ptr, arena->used < size? arena->used : size);
     return result;
   }
-}
-
-static inline void arena_free(arena_t arena) {
-  if (arena->next) {
-    arena_free(arena->next);
-  }
-  free(arena);
 }
 
 #endif

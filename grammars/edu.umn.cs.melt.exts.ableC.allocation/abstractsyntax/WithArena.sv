@@ -14,7 +14,7 @@ top::Stmt ::= a::Name body::Stmt
       arena_t $Name{@a} = arena_create();
       $Decl{arenaAllocDecl(^a)}
       $Stmt{@body}
-      arena_free($Name{^a});
+      arena_destroy($Name{^a});
     }
   };
 
