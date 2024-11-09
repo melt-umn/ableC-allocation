@@ -7,6 +7,12 @@ top::Stmt ::= a::Name body::Stmt
   top.pp = ppConcat([ pp"with_arena", space(), a.pp, line(), braces(nestlines(2, body.pp)) ]);
   top.functionDefs := [];
   top.labelDefs := [];
+
+  local localErrors::[Message] =
+   (if null(lookupValue("arena_malloc", top.env))
+    then [errFromOrigin(top, "Use of with_arena requires include of <arena.h>")]
+    else []) ++
+    body.errors;
   
   forward fwrd = ableC_Stmt {
     proto_typedef arena_t;
@@ -18,8 +24,5 @@ top::Stmt ::= a::Name body::Stmt
     }
   };
 
-  forwards to
-    if null(lookupValue("arena_malloc", top.env))
-    then warnStmt([errFromOrigin(top, "Use of with_arena requires include of <arena.h>")])
-    else @fwrd;
+  forwards to if null(localErrors) then @fwrd else warnStmt(localErrors);
 }
