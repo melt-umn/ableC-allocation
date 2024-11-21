@@ -5,8 +5,8 @@ top::Stmt ::= a::Name body::Stmt
 {
   attachNote extensionGenerated("ableC-allocation");
   top.pp = ppConcat([ pp"with_arena", space(), a.pp, line(), braces(nestlines(2, body.pp)) ]);
-  top.functionDefs := [];
-  top.labelDefs := [];
+  top.functionDefs := body.functionDefs;
+  top.labelDefs := body.labelDefs;
 
   local localErrors::[Message] =
    (if null(lookupValue("arena_malloc", top.env))
