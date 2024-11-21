@@ -14,7 +14,7 @@ top::Stmt ::= a::Name body::Stmt
     else []) ++
     case lookupMisc("this_func", top.env) of
     | currentFunctionItem(n, _) :: _ ->
-        if n.name != "main" then [] else body.returnWarnings
+        if n.name == "main" then [] else body.returnWarnings
     | _ -> body.returnWarnings
     end ++
     body.errors;
