@@ -81,7 +81,7 @@ int main() {
     a5 = reallocate(a5, sizeof(vals) + sizeof(int));
     a5[4] = 5;
     check_array(a5, 5, 1, 14);
-  }
 
-  return 0;
+    return 0; // No warning about return since this is main
+  }
 }
