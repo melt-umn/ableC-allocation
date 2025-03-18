@@ -65,10 +65,12 @@ static inline void *arena_realloc(arena_t arena, void *ptr, size_t size) {
     return ptr;
   } else {
     // Else, allocate a new segment and copy the memory.
-    void *result = arena_malloc(arena, size);
     // We don't know how long the originally-allocated segment to copy was,
-    // but it can't have been longer than the used portion of the current segment.
-    memcpy(result, ptr, arena->used < size? arena->used : size);
+    // but it can't have been longer than the used portion of the current segment
+    // following the pointer.
+    size_t max_orig_size = arena->used + (void*)arena->data - ptr;
+    void *result = arena_malloc(arena, size);
+    memcpy(result, ptr, max_orig_size < size? max_orig_size : size);
     return result;
   }
 }
