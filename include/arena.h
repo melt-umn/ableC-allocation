@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <stddef.h>
 
 #define ARENA_INITIAL_CAPACITY 64
 
@@ -35,13 +36,16 @@ static inline void arena_destroy(arena_t arena) {
 }
 
 static inline void *arena_malloc(arena_t arena, size_t size) {
-  if (arena->used + size < arena->capacity) {
+  size_t alignment = _Alignof(max_align_t);
+  size_t used_padded = (arena->used + alignment - 1) & ~(alignment - 1);
+
+  if (used_padded + size < arena->capacity) {
     // The object fits in the current segment
-    void *result = arena->data + arena->used;
-    arena->used += size;
+    void *result = arena->data + used_padded;
+    arena->used = used_padded + size;
     return result;
   }
-  
+
   // Allocate in the next segment
   if (arena->next == NULL) {
     arena->next = arena_create_sized((arena->capacity + size) * 2);
