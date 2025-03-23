@@ -31,7 +31,7 @@ top::AllocContext ::=
 }
 
 production arenaAllocContext
-top::AllocContext ::= a::Name
+top::AllocContext ::= a::Expr
 {
   top.alloc = arenaMalloc(^a);
   top.realloc = arenaRealloc(^a);
@@ -110,18 +110,18 @@ top::Def ::= a::AllocContext
 
 fun allocErrors [Message] ::= env::Env =
   case env.allocContext of
-  | unspecifiedAllocContext() :: _ -> [errFromOrigin(ambientOrigin(), "An allocator to use must be specfied (e.g. `allocate_using heap;`)")]
+  | unspecifiedAllocContext() :: _ -> [errFromOrigin(ambientOrigin(), "An allocator to use must be specified (e.g. `allocate_using heap;`)")]
   | _ -> []
   end;
 
 fun reallocErrors [Message] ::= env::Env =
   case env.allocContext of
-  | unspecifiedAllocContext() :: _ -> [errFromOrigin(ambientOrigin(), "An allocator supporting reallocation must be specfied (e.g. `allocate_using heap;`)")]
+  | unspecifiedAllocContext() :: _ -> [errFromOrigin(ambientOrigin(), "An allocator supporting reallocation must be specified (e.g. `allocate_using heap;`)")]
   | _ -> []
   end;
 
 fun deallocErrors [Message] ::= env::Env =
   case env.allocContext of
-  | unspecifiedAllocContext() :: _ -> [errFromOrigin(ambientOrigin(), "An allocator supporting deallocation must be specfied (e.g. `allocate_using heap;`)")]
+  | unspecifiedAllocContext() :: _ -> [errFromOrigin(ambientOrigin(), "An allocator supporting deallocation must be specified (e.g. `allocate_using heap;`)")]
   | _ -> []
   end;

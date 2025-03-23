@@ -33,10 +33,10 @@ top::Expr ::= @size::Expr
 }
 
 production arenaMalloc implements Alloc
-top::Expr ::= @size::Expr arena::Name
+top::Expr ::= @size::Expr arena::Expr
 {
   attachNote extensionGenerated("ableC-allocation");
-  forwards to ableC_Expr { arena_malloc($Name{@arena}, $Expr{@size}) };
+  forwards to ableC_Expr { arena_malloc($Expr{@arena}, $Expr{@size}) };
 }
 
 production unspecifiedAlloc implements Alloc
@@ -87,10 +87,10 @@ top::Expr ::= @ptr::Expr @size::Expr
 }
 
 production arenaRealloc implements Realloc
-top::Expr ::= @ptr::Expr @size::Expr arena::Name
+top::Expr ::= @ptr::Expr @size::Expr arena::Expr
 {
   attachNote extensionGenerated("ableC-allocation");
-  forwards to ableC_Expr { arena_realloc($Name{@arena}, $Expr{@ptr}, $Expr{@size}) };
+  forwards to ableC_Expr { arena_realloc($Expr{@arena}, $Expr{@ptr}, $Expr{@size}) };
 }
 
 production unspecifiedRealloc implements Realloc

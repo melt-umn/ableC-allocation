@@ -23,7 +23,7 @@ top::Stmt ::= a::Name body::Stmt
     proto_typedef arena_t;
     {
       arena_t $Name{@a} = arena_create();
-      $Decl{arenaAllocDecl(^a)}
+      $Decl{arenaAllocDecl(declRefExpr(^a))}
       $Stmt{@body}
       arena_destroy($Name{^a});
     }

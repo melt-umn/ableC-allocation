@@ -7,6 +7,6 @@ grammar edu:umn:cs:melt:exts:ableC:allocation:artifacts:mda_test;
 
 import edu:umn:cs:melt:ableC:host;
 
-copper_mda testTemplateStructDecl(ablecParser) {
+copper_mda testAllocation(ablecParser) {
   edu:umn:cs:melt:exts:ableC:allocation:concretesyntax;
 }

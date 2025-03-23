@@ -7,7 +7,7 @@ terminal Gc_t 'gc' lexer classes {Keyword};
 terminal Arena_t 'arena' lexer classes {Keyword};
 
 concrete productions top::Declaration_c
-| 'allocate_using' a::Allocator_c
+| 'allocate_using' a::Allocator_c ';'
   { top.ast = a.ast; }
 
 closed tracked nonterminal Allocator_c with ast<ast:Decl>;
@@ -19,5 +19,5 @@ concrete productions top::Allocator_c
   { abstract heapAllocDecl; }
 | 'gc'
   { abstract gcAllocDecl; }
-| 'arena' a::Identifier_t
-  { top.ast = arenaAllocDecl(ast:fromId(a)); }
+| 'arena' a::AssignExpr_c
+  { abstract arenaAllocDecl; }
