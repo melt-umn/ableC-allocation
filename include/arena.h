@@ -35,6 +35,11 @@ static inline void arena_destroy(arena_t arena) {
   free(arena);
 }
 
+// Callback wrapper for use with pthread_cleanup_push
+static void arena_destroy_cb(void *arena) {
+  arena_destroy((arena_t)arena);
+}
+
 static inline void *arena_malloc(arena_t arena, size_t size) {
   size_t alignment = _Alignof(max_align_t);
   size_t used_padded = (arena->used + alignment - 1) & ~(alignment - 1);
