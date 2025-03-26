@@ -13,7 +13,7 @@ struct arena {
   size_t capacity;
   size_t used;
   arena_t next;
-  unsigned char data[];
+  max_align_t data[];
 };
 
 static inline arena_t arena_create_sized(size_t capacity) {
@@ -46,7 +46,7 @@ static inline void *arena_malloc(arena_t arena, size_t size) {
 
   if (used_padded + size < arena->capacity) {
     // The object fits in the current segment
-    void *result = arena->data + used_padded;
+    void *result = (unsigned char*)arena->data + used_padded;
     arena->used = used_padded + size;
     return result;
   }
@@ -61,23 +61,23 @@ static inline void *arena_malloc(arena_t arena, size_t size) {
 static inline void *arena_realloc(arena_t arena, void *ptr, size_t size) {
   if (ptr == NULL) {
     return arena_malloc(arena, size);
-  } else if (ptr < (void*)arena->data || ptr >= (void*)arena->data + arena->capacity) {
+  } else if ((unsigned char*)ptr < (unsigned char*)arena->data || (unsigned char*)ptr >= (unsigned char*)arena->data + arena->capacity) {
     // The pointer is not in the current block of memory
     if (arena->next == NULL) {
-      fprintf(stderr, "arena_realloc'ed pointer %p not in arena %p\n", (void*)ptr, (void*)arena);
+      fprintf(stderr, "arena_realloc'ed pointer %p not in arena %p\n", ptr, (void*)arena);
       abort();
     }
     return arena_realloc(arena->next, ptr, size);
-  } else if (arena->used + size < arena->capacity && ptr == arena->data + arena->used) {
+  } else if (arena->used + size < arena->capacity && ptr == (unsigned char*)arena->data + arena->used) {
     // If the pointer is the last allocated memory, we can just extend it.
-    arena->used = (void*)arena->data - ptr + size;
+    arena->used = (unsigned char*)arena->data - (unsigned char*)ptr + size;
     return ptr;
   } else {
     // Else, allocate a new segment and copy the memory.
     // We don't know how long the originally-allocated segment to copy was,
     // but it can't have been longer than the used portion of the current segment
     // following the pointer.
-    size_t max_orig_size = arena->used + (void*)arena->data - ptr;
+    size_t max_orig_size = arena->used + (unsigned char*)arena->data - (unsigned char*)ptr;
     void *result = arena_malloc(arena, size);
     memcpy(result, ptr, max_orig_size < size? max_orig_size : size);
     return result;
