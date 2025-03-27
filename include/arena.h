@@ -84,4 +84,8 @@ static inline void *arena_realloc(arena_t arena, void *ptr, size_t size) {
   }
 }
 
+static size_t arena_total_capacity(arena_t ar) {
+  return ar->capacity + (ar->next? arena_total_capacity(ar->next) : 0);
+}
+
 #endif
