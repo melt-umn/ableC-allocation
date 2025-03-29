@@ -41,7 +41,7 @@ static void arena_destroy_cb(void *arena) {
 }
 
 static inline void *arena_malloc(arena_t arena, size_t size) {
-  size_t alignment = _Alignof(max_align_t);
+  const size_t alignment = _Alignof(max_align_t);
   size_t used_padded = (arena->used + alignment - 1) & ~(alignment - 1);
 
   if (used_padded + size < arena->capacity) {
